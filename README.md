@@ -77,3 +77,8 @@ os critérios abaixo:
 - Testes unitários: até +15%, dependendo da cobertura
 
 Após aplicar todos os bônus, a nota é truncada no intervalo 0-100%. 
+
+
+python -m lolcompiler.main examples/helloworld.lol
+python -m lolcompiler.main examples/variables.lol
+python -m lolcompiler.main examples/error.lol
