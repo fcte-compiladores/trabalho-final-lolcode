@@ -8,6 +8,7 @@ class LolLexer(Lexer):
         SUM_OF, DIFF_OF, PRODUKT_OF, QUOSHUNT_OF,
         O_RLY, YA_RLY, NO_WAI, OIC,
         NUMBR_F, NUMBR_I, YARN, IDENTIFIER,
+        AN,
     }
 
     ignore = ' \t'
@@ -22,6 +23,7 @@ class LolLexer(Lexer):
     O_RLY = r'O RLY\?'
     YA_RLY = r'YA RLY'
     NO_WAI = r'NO WAI'
+    AN = r'AN'
     @_(r'[a-zA-Z][a-zA-Z0-9_]*')
 
     def IDENTIFIER(self, t):
