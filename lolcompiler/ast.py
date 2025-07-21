@@ -40,3 +40,12 @@ class Identifier:
 
     def __repr__(self):
         return f"Identifier('{self.name}')"
+    
+class BinaryOp:
+    def __init__(self, op, left, right):
+        self.op = op
+        self.left = left
+        self.right = right
+
+    def __repr__(self):
+        return f"BinaryOp(op='{self.op}', left={self.left}, right={self.right})"

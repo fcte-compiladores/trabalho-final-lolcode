@@ -1,6 +1,6 @@
 from sly import Parser
 from .lexer import LolLexer
-from .ast import Program, Visible, Number, Yarn, Identifier, VariableDeclaration
+from .ast import Program, Visible, Number, Yarn, Identifier, VariableDeclaration, BinaryOp
 
 class LolParser(Parser):
     tokens = LolLexer.tokens
@@ -37,6 +37,14 @@ class LolParser(Parser):
     @_('I_HAS_A IDENTIFIER')
     def var_decl_statement(self, p):
         return VariableDeclaration(name=p.IDENTIFIER, value=None)
+    
+    @_('SUM_OF expr AN expr',
+       'DIFF_OF expr AN expr',
+       'PRODUKT_OF expr AN expr',
+       'QUOSHUNT_OF expr AN expr')
+    def expr(self, p):
+
+        return BinaryOp(op=p[0], left=p[1], right=p[3])
     
     @_('YARN')
     def expr(self, p):

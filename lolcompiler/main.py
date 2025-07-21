@@ -1,6 +1,9 @@
+# lolcompiler/main.py
+
 import sys
 from .lexer import LolLexer
-from .parser import LolParser 
+from .parser import LolParser
+from .interpreter import Interpreter 
 
 def main():
     if len(sys.argv) < 2:
@@ -15,18 +18,15 @@ def main():
 
         lexer = LolLexer()
         parser = LolParser()
-
-        print("--- Código Fonte ---")
-        print(code)
         
         ast = parser.parse(lexer.tokenize(code))
+        
+        if ast:
+            interpreter = Interpreter()
+            interpreter.visit(ast)
 
-        print("\n--- Árvore de Sintaxe Abstrata (AST) ---")
-        print(ast)
-        print("----------------------------------------")
-
-    except FileNotFoundError:
-        print(f"Erro: Arquivo não encontrado em '{file_path}'")
+    except (FileNotFoundError, NameError, TypeError, ZeroDivisionError) as e:
+        print(f"Erro: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
