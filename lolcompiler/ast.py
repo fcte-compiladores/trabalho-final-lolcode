@@ -19,7 +19,6 @@ class VariableDeclaration:
     def __repr__(self):
         return f"VarDecl(name='{self.name}', value={self.value})"
 
-
 class Number:
     def __init__(self, value):
         self.value = value
@@ -49,3 +48,27 @@ class BinaryOp:
 
     def __repr__(self):
         return f"BinaryOp(op='{self.op}', left={self.left}, right={self.right})"
+    
+class FunctionDeclaration:
+    def __init__(self, name, params, body):
+        self.name = name
+        self.params = params
+        self.body = body
+
+    def __repr__(self):
+        return f"FuncDecl(name='{self.name}', params={self.params}, body={self.body})"
+
+class FunctionCall:
+    def __init__(self, name, args):
+        self.name = name
+        self.args = args
+
+    def __repr__(self):
+        return f"FuncCall(name='{self.name}', args={self.args})"
+
+class Return:
+    def __init__(self, value):
+        self.value = value
+
+    def __repr__(self):
+        return f"Return(value={self.value})"

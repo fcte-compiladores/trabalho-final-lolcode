@@ -1,36 +1,96 @@
-from .ast import Number, Yarn, Identifier, VariableDeclaration, Visible, Program, BinaryOp
+from .ast import Number, Yarn, Identifier, VariableDeclaration, Visible, Program, BinaryOp, FunctionDeclaration, Return, FunctionCall
+
+class ReturnSignal(Exception):
+    """Exceção customizada usada para sinalizar um 'return' de função."""
+    def __init__(self, value):
+        self.value = value
+
+class Environment:
+    """Gerencia os escopos de variáveis (tabelas de símbolos)."""
+    def __init__(self, parent=None):
+        self.variables = {}
+        self.parent = parent # Referência ao escopo pai (ex: global)
+
+    def get(self, name):
+        """Busca uma variável no escopo atual ou nos pais."""
+        if name in self.variables:
+            return self.variables[name]
+        if self.parent:
+            return self.parent.get(name)
+        raise NameError(f"Variável '{name}' não foi declarada.")
+
+    def set(self, name, value):
+        """Define uma variável no escopo atual."""
+        self.variables[name] = value
 
 class Interpreter:
     def __init__(self):
-        
-        self.variables = {}
+        self.environment = Environment()
+        self.functions = {}
 
     def visit(self, node):
-        """
-        O método 'visit' é o nosso despachante (dispatcher).
-        Ele descobre o tipo do nó e chama o método 'visit_TIPO' correspondente.
-        Ex: Se o nó é um 'Number', ele chama 'self.visit_Number(node)'.
-        """
         method_name = f'visit_{type(node).__name__}'
         visitor = getattr(self, method_name, self.generic_visit)
         return visitor(node)
 
     def generic_visit(self, node):
-        """Método chamado caso não haja um método 'visit_TIPO' específico."""
         raise Exception(f'Nenhum método visit_{type(node).__name__} encontrado')
 
     def visit_Program(self, node):
-        """Executa cada statement do programa."""
         for statement in node.statements:
-            self.visit(statement)
+            if isinstance(statement, FunctionDeclaration):
+                self.visit(statement)
+        
+        for statement in node.statements:
+            if not isinstance(statement, FunctionDeclaration):
+                self.visit(statement)
+
+    def visit_FunctionDeclaration(self, node):
+        self.functions[node.name] = node
 
     def visit_VariableDeclaration(self, node):
-        """Processa a declaração de uma variável."""
         value = None
         if node.value:
-            value = self.visit(node.value) 
+            value = self.visit(node.value)
+        self.environment.set(node.name, value)
+
+    def visit_Identifier(self, node):
+        return self.environment.get(node.name)
         
-        self.variables[node.name] = value
+    def visit_FunctionCall(self, node):
+        func_name = node.name
+        if func_name not in self.functions:
+            raise NameError(f"Função '{func_name}' não foi definida.")
+
+        func_decl = self.functions[func_name]
+
+        if len(node.args) != len(func_decl.params):
+            raise TypeError(f"Função '{func_name}' espera {len(func_decl.params)} argumentos, mas recebeu {len(node.args)}.")
+
+        arg_values = [self.visit(arg) for arg in node.args]
+
+        func_env = Environment(parent=self.environment)
+
+        for param_name, arg_value in zip(func_decl.params, arg_values):
+            func_env.set(param_name, arg_value)
+        
+        original_env = self.environment
+        self.environment = func_env
+
+        return_value = None
+        try:
+            for statement in func_decl.body:
+                self.visit(statement)
+        except ReturnSignal as ret:
+            return_value = ret.value
+        finally:
+            self.environment = original_env
+
+        return return_value
+
+    def visit_Return(self, node):
+        value = self.visit(node.value)
+        raise ReturnSignal(value)
 
     def visit_Visible(self, node):
         """Processa o comando VISIBLE."""
@@ -45,15 +105,7 @@ class Interpreter:
         """Retorna o valor da string bruta."""
         return node.value
 
-    def visit_Identifier(self, node):
-        """Busca o valor de uma variável na tabela de símbolos."""
-        var_name = node.name
-        if var_name in self.variables:
-            return self.variables[var_name]
-        else:
-            # Erro semântico! Variável não foi declarada.
-            raise NameError(f"Variável '{var_name}' não foi declarada.")
-    
+
     def visit_BinaryOp(self, node):
         left_val = self.visit(node.left)
         right_val = self.visit(node.right)
