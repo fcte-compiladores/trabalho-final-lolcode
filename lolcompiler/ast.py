@@ -72,3 +72,26 @@ class Return:
 
     def __repr__(self):
         return f"Return(value={self.value})"
+
+class Boolean:
+    def __init__(self, value):
+        self.value = value
+
+    def __repr__(self):
+        return f"Boolean({self.value})"
+
+
+class IfElse:
+    def __init__(self, condition_block, else_block=None):
+        self.condition_block = condition_block
+        self.else_block = else_block
+
+    def __repr__(self):
+        return f"IfElse(condition={self.condition_block}, else={self.else_block})"
+
+class Input:
+    def __init__(self, var_name):
+        self.var_name = var_name
+
+    def __repr__(self):
+        return f"Input(var='{self.var_name}')"

@@ -93,6 +93,10 @@ O código-fonte está organizado nos seguintes módulos principais dentro da pas
 * **Melhoria Futura:** Uma melhoria incremental seria adicionar um sistema de recuperação de erros mais robusto no parser, para que ele pudesse reportar múltiplos erros de sintaxe em uma única execução.
 
 
-python -m lolcompiler.main examples/helloworld.lol
-python -m lolcompiler.main examples/variables.lol
-python -m lolcompiler.main examples/error.lol
+## **Execução usando python3:**
+
+```bash
+python3 -m lolcompiler.main examples/helloworld.lol
+python3 -m lolcompiler.main examples/variables.lol
+python3 -m lolcompiler.main examples/error.lol
+```

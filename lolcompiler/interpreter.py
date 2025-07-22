@@ -1,4 +1,5 @@
-from .ast import Number, Yarn, Identifier, VariableDeclaration, Visible, Program, BinaryOp, FunctionDeclaration, Return, FunctionCall
+from .ast import (Number, Yarn, Identifier, VariableDeclaration, Visible,
+Program, BinaryOp, FunctionDeclaration, Return, FunctionCall, Boolean, IfElse, Input)
 
 class ReturnSignal(Exception):
     """Exceção customizada usada para sinalizar um 'return' de função."""
@@ -26,6 +27,7 @@ class Environment:
 class Interpreter:
     def __init__(self):
         self.environment = Environment()
+        self.environment.set('IT', None)
         self.functions = {}
 
     def visit(self, node):
@@ -123,3 +125,29 @@ class Interpreter:
             if right_val == 0:
                 raise ZeroDivisionError("Divisão por zero não permitida.")
             return left_val / right_val
+
+    def visit_Boolean(self, node):
+        self.environment.set('IT', node.value)
+        return node.value
+
+    def visit_IfElse(self, node):
+        condition = self.environment.get('IT')
+        if condition:
+            for stmt in node.condition_block:
+                self.visit(stmt)
+        elif node.else_block:
+            for stmt in node.else_block:
+                self.visit(stmt)
+
+    def visit_Input(self, node):
+        user_input = input(f"{node.var_name}? ")
+        try:
+            val = int(user_input)
+        except ValueError:
+            try:
+                val = float(user_input)
+            except ValueError:
+                val = user_input.strip()
+        self.environment.set(node.var_name, val)
+        self.environment.set('IT', val)
+        return val

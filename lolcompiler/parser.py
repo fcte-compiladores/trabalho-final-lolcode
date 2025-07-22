@@ -3,7 +3,7 @@
 from sly import Parser
 from .lexer import LolLexer
 from .ast import (Program, Visible, Number, Yarn, Identifier, VariableDeclaration, 
-                  BinaryOp, FunctionDeclaration, FunctionCall, Return)
+                  BinaryOp, FunctionDeclaration, FunctionCall, Return, Boolean, IfElse, Input)
 
 class LolParser(Parser):
     tokens = LolLexer.tokens
@@ -73,10 +73,27 @@ class LolParser(Parser):
     def expr(self, p): return Number(p[0])
     @_('IDENTIFIER')
     def expr(self, p): return Identifier(p.IDENTIFIER)
-    
+    @_('WIN')
+    def expr(self, p): return Boolean(True)
+
+    @_('FAIL')
+    def expr(self, p): return Boolean(False)
+
     @_('')
     def empty(self, p): pass
 
     def error(self, p):
         if p: print(f"Erro de sintaxe no token {p.type}('{p.value}') na linha {p.lineno}")
         else: print("Erro de sintaxe no final do arquivo!")
+    
+    @_('O_RLY statement_list YA_RLY statement_list OIC')
+    def statement(self, p):
+        return IfElse(condition_block=p.statement_list1, else_block=None)
+
+    @_('O_RLY statement_list YA_RLY statement_list NO_WAI statement_list OIC')
+    def statement(self, p):
+        return IfElse(condition_block=p.statement_list1, else_block=p.statement_list2)
+
+    @_('GIMMEH IDENTIFIER')
+    def statement(self, p):
+        return Input(p.IDENTIFIER)

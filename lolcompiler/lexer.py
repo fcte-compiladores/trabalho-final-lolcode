@@ -10,6 +10,7 @@ class LolLexer(Lexer):
         NUMBR_F, NUMBR_I, YARN, IDENTIFIER,
         AN,
         HOW_DUZ_I, YR, IF_U_SAY_SO, FOUND_YR,
+        WIN, FAIL
     }
 
     ignore = ' \t'
@@ -35,7 +36,8 @@ class LolLexer(Lexer):
 
         keyword_map = {
             'HAI': 'HAI', 'KTHXBYE': 'KTHXBYE', 'VISIBLE': 'VISIBLE',
-            'GIMMEH': 'GIMMEH', 'ITZ': 'ITZ', 'OIC': 'OIC'
+            'GIMMEH': 'GIMMEH', 'ITZ': 'ITZ', 'OIC': 'OIC',
+            'WIN': 'WIN', 'FAIL': 'FAIL'
         }
         if t.value in keyword_map:
             t.type = keyword_map[t.value]
