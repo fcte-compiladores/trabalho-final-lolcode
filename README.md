@@ -58,7 +58,7 @@ Nossa abordagem utiliza um interpretador do tipo **tree-walking**. O código fon
     ```
 3.  Para rodar o interpretador, execute:
     ```bash
-    uv run python -m lolcompiler.main examples/fibonacci.lol
+    uv run python -m lolcompiler.main examples/helloworld.lol
     ```
 
 ## Exemplos
