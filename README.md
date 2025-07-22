@@ -66,9 +66,18 @@ Nossa abordagem utiliza um interpretador do tipo **tree-walking**. O código fon
 A pasta `examples/` contém diversos arquivos de exemplo com complexidade crescente:
 
 * `helloworld.lol`: O clássico "Hello, World!".
-* `calculator.lol`: Pede dois números e mostra a soma, diferença, etc.
-* `fibonacci.lol`: Calcula e exibe os primeiros N números da sequência de Fibonacci (exemplo com laços).
-* `factorial_recursive.lol`: Calcula o fatorial de um número usando uma função recursiva (exemplo com funções).
+
+* `calculator.lol`: Recebe dois números e mostra a soma e multiplica outros dois numeros.
+
+* `variables.lol`: Demonstra a declaração, inicialização e exibição de variáveis.
+
+* `input_conditional.lol`: Pede um número ao usuário e utiliza uma estrutura condicional para mostrar a soma do número com 10.
+
+* `boolean.lol`: Mostra o uso de variáveis booleanas (WIN/FAIL) em uma estrutura condicional.
+
+* `add.lol`: Apresenta a definição e o uso de uma função para somar dois números.
+
+* `error.lol`: Contém um erro de sintaxe proposital para demonstrar o comportamento do compilador.
 
 ## Referências
 
@@ -97,6 +106,6 @@ O código-fonte está organizado nos seguintes módulos principais dentro da pas
 
 ```bash
 python3 -m lolcompiler.main examples/helloworld.lol
-python3 -m lolcompiler.main examples/variables.lol
-python3 -m lolcompiler.main examples/error.lol
+python3 -m lolcompiler.main examples/boolean.lol
+python3 -m lolcompiler.main examples/input_conditional.lol
 ```
